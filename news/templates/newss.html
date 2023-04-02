@@ -1,0 +1,60 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+{% load cencor %}
+<!-- Подключаем новый файл с нашим тегом -->
+{% load custom_tags %}
+
+<!-- Название у нас будет newss -->
+{% block title %}
+Newss
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим все новости -->
+{% block content %}
+   <h1>Все Новости</h1>
+   <hr>
+<!--    &lt;!&ndash; Используем переданную из представления переменную time_now-->
+<!--   и применяем к ней фильтр date. По назначению этот фильтр очень похож-->
+<!--   на метод strftime у объекта datetime в Python — вывод времени-->
+<!--   в указанном формате. &ndash;&gt;-->
+<!--   <h3>{{ time_now|date:'M d Y' }}</h3>-->
+   <!-- Вот так выглядело использование переменной и фильтра -->
+   <!-- <h3>{{ time_now|date:'M d Y' }}</h3> -->
+   <!-- А вот так мы используем наш тег-->
+   <h3>{% current_time '%b %d %Y' %}</h3>
+   <!-- Если в переменной next_sale будет None,
+   то выведется указанный в фильтре текст -->
+   <h3> {{ next_sale|default_if_none:"Чуть позже сообщим о важной новости!" }} </h3>
+   <!-- Используем наш фильтр -->
+
+   <hr>
+   {% if newss %}
+       <table>
+           <tr>
+               <td>Название</td>
+               <td>Описание</td>
+               <td>Категория</td>
+               <td>Количество</td>
+           </tr>
+
+           {% for news in newss %}
+           <tr>
+               <td>{{ news.name }}</td>
+                <!-- Добавим специальный фильтр truncatechars,
+                чтобы ограничить количество символов до 20.
+                Все остальные символы превратятся в многоточие. -->
+               <td>{{ news.description|truncatewords:1|censor }}</td>
+               <td>{{ news.category.name }}</td>
+               <td>{{ news.quantity }}</td>
+
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Новостей нет!</h2>
+   {% endif %}
+{% endblock content %}
+
+

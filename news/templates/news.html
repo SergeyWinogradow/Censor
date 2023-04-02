@@ -1,0 +1,21 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+{% load custom_tags %}
+{% load cencor %}
+<!-- Название у нас будет news -->
+{% block title %}
+News
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим саму новость, идентификатор которого был передан в url -->
+{% block content %}
+<hr>
+<h3>{% current_time '%b %d %Y' %}</h3>
+<hr>
+
+<h1>{{ news.name }}</h1>
+<h1>{{ news.category }}</h1>
+<hr>
+<td>{{ news.description|censor }}</td>
+<hr>
+{% endblock content %}
